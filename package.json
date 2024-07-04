@@ -5,13 +5,15 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start":"node server.js"
+    "start": "node index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.19.2"
-    
+    "express": "^4.19.2",
+    "lru-cache": "^10.3.0",
+    "mysql2": "^3.10.2",
+    "node": "^22.4.0"
   }
 }
