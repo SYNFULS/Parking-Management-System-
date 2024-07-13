@@ -1,7 +1,5 @@
 const db = require('../config/db.config');
 
-// Model functions for CRUD operations
-
 const ParkingModel = {
     getAllParkingLots: (callback) => {
         db.query('SELECT * FROM ParkingLots', callback);
@@ -31,6 +29,104 @@ const ParkingModel = {
 
     deleteParkingLot: (id, callback) => {
         db.query('DELETE FROM ParkingLots WHERE parking_lot_id = ?', [id], callback);
+    },
+
+    getAllParkingSpaces: (callback) => {
+        db.query('SELECT * FROM ParkingSpaces', callback);
+    },
+
+    getParkingSpaceById: (id, callback) => {
+        db.query('SELECT * FROM ParkingSpaces WHERE space_id = ?', [id], callback);
+    },
+
+    createParkingSpace: (data, callback) => {
+        const { parking_lot_id, space_number, is_available } = data;
+        db.query(
+            'INSERT INTO ParkingSpaces (parking_lot_id, space_number, is_available) VALUES (?, ?, ?)',
+            [parking_lot_id, space_number, is_available],
+            callback
+        );
+    },
+
+    updateParkingSpace: (id, data, callback) => {
+        const { parking_lot_id, space_number, is_available } = data;
+        db.query(
+            'UPDATE ParkingSpaces SET parking_lot_id = ?, space_number = ?, is_available = ? WHERE space_id = ?',
+            [parking_lot_id, space_number, is_available, id],
+            callback
+        );
+    },
+
+    deleteParkingSpace: (id, callback) => {
+        db.query('DELETE FROM ParkingSpaces WHERE space_id = ?', [id], callback);
+    },
+
+    getAllVehicles: (callback) => {
+        db.query('SELECT * FROM Vehicles', callback);
+    },
+
+    getVehicleById: (id, callback) => {
+        db.query('SELECT * FROM Vehicles WHERE vehicle_id = ?', [id], callback);
+    },
+
+    createVehicle: (data, callback) => {
+        const { license_plate, vehicle_type } = data;
+        db.query(
+            'INSERT INTO Vehicles (license_plate, vehicle_type) VALUES (?, ?)',
+            [license_plate, vehicle_type],
+            callback
+        );
+    },
+
+    updateVehicle: (id, data, callback) => {
+        const { license_plate, vehicle_type } = data;
+        db.query(
+            'UPDATE Vehicles SET license_plate = ?, vehicle_type = ? WHERE vehicle_id = ?',
+            [license_plate, vehicle_type, id],
+            callback
+        );
+    },
+
+    deleteVehicle: (id, callback) => {
+        db.query('DELETE FROM Vehicles WHERE vehicle_id = ?', [id], callback);
+    },
+
+    getAllLogs: (callback) => {
+        db.query('SELECT * FROM EntryExitLogs', callback);
+    },
+
+    getLogById: (id, callback) => {
+        db.query('SELECT * FROM EntryExitLogs WHERE log_id = ?', [id], callback);
+    },
+
+    createLog: (data, callback) => {
+        const { vehicle_id, space_id, entry_time, exit_time } = data;
+        db.query(
+            'INSERT INTO EntryExitLogs (vehicle_id, space_id, entry_time, exit_time) VALUES (?, ?, ?, ?)',
+            [vehicle_id, space_id, entry_time, exit_time],
+            callback
+        );
+    },
+
+    updateLog: (id, data, callback) => {
+        const { vehicle_id, space_id, entry_time, exit_time } = data;
+        db.query(
+            'UPDATE EntryExitLogs SET vehicle_id = ?, space_id = ?, entry_time = ?, exit_time = ? WHERE log_id = ?',
+            [vehicle_id, space_id, entry_time, exit_time, id],
+            callback
+        );
+    },
+
+    deleteLog: (id, callback) => {
+        db.query('DELETE FROM EntryExitLogs WHERE log_id = ?', [id], (err, results) => {
+            if (err) return callback(err);
+            // Also delete the vehicle entry when the log is deleted
+            db.query('DELETE FROM Vehicles WHERE vehicle_id = (SELECT vehicle_id FROM EntryExitLogs WHERE log_id = ?)', [id], callback);
+        });
+    },
+
+    getAvailableSpaces: (parking_lot_id, callback) => {
+        db.query('SELECT * FROM ParkingSpaces WHERE parking_lot_id = ? AND is_available = 1', [parking_lot_id], callback);
     }
 };
 
