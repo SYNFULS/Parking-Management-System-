@@ -215,8 +215,9 @@ const ParkingController = {
             res.json({ message: 'Log updated' });
         });
     },
-
     
+
+
     deleteLog: (req, res) => {
         const { id } = req.params;
         ParkingModel.deleteLog(id, (err, results) => {
