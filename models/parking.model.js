@@ -130,4 +130,5 @@ const ParkingModel = {
     }
 };
 
+
 module.exports = ParkingModel;

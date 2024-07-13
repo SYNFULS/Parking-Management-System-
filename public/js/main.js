@@ -57,6 +57,7 @@ $(document).ready(function () {
         });
     });
 
+    
     // Handle Vehicle Exit form submission
     $('#exitForm').on('submit', function (event) {
         event.preventDefault();

@@ -9,6 +9,7 @@ router.post('/parking-lots', ParkingController.createParkingLot);
 router.put('/parking-lots/:id', ParkingController.updateParkingLot);
 router.delete('/parking-lots/:id', ParkingController.deleteParkingLot);
 
+
 // ParkingSpaces routes
 router.get('/parking-spaces', ParkingController.getAllParkingSpaces);
 router.get('/parking-spaces/:id', ParkingController.getParkingSpaceById);

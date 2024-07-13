@@ -216,6 +216,7 @@ const ParkingController = {
         });
     },
 
+    
     deleteLog: (req, res) => {
         const { id } = req.params;
         ParkingModel.deleteLog(id, (err, results) => {

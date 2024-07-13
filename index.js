@@ -12,6 +12,7 @@ app.get('/', (req, res) => {
     res.sendFile(__dirname + '/views/index.html');
 });
 
+
 app.get('/add-parking-lot', (req, res) => {
     res.sendFile(__dirname + '/views/add_parking_lot.html');
 });
