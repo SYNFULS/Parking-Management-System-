@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <title>Add Parking Lot</title>
+</head>
+<body>
+    
+    <div class="container mt-5">
+        <h2>Add Parking Lot</h2>
+        <form id="addParkingLotForm">
+            <div class="form-group">
+                <label for="lotName">Lot Name</label>
+                <input type="text" class="form-control" id="lotName" name="lot_name" required>
+            </div>
+            <div class="form-group">
+                <label for="location">Location</label>
+                <input type="text" class="form-control" id="location" name="location" required>
+            </div>
+            <div class="form-group">
+                <label for="totalSpaces">Total Spaces</label>
+                <input type="number" class="form-control" id="totalSpaces" name="total_spaces" required>
+            </div>
+            <div class="form-group">
+                <label for="availableSpaces">Available Spaces</label>
+                <input type="number" class="form-control" id="availableSpaces" name="available_spaces" required>
+            </div>
+            <div class="form-group">
+                <label for="contactNumber">Contact Number</label>
+                <input type="text" class="form-control" id="contactNumber" name="contact_number" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Add Parking Lot</button>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script>
+        $('#addParkingLotForm').on('submit', function (event) {
+            event.preventDefault();
+            const data = $(this).serialize();
+            $.post('/api/parking-lots', data, function (response) {
+                alert('Parking lot added successfully!');
+                window.location.href = '/';
+            }).fail(function () {
+                alert('Error adding parking lot');
+            });
+        });
+    </script>
+</body>
+</html>
