@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <title>Vehicle Exit</title>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Vehicle Exit</h2>
+        <form id="exitForm">
+            <div class="form-group">
+                <label for="vehicleId">Vehicle ID</label>
+                <select class="form-control" id="vehicleId" name="vehicle_id" required>
+                    <!-- Options will be populated by JavaScript -->
+                </select>
+            </div>
+            <button type="submit" class="btn btn-danger">Remove Vehicle</button>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $.get('/api/vehicles', function (data) {
+                const vehicleSelect = $('#vehicleId');
+                data.forEach(vehicle => {
+                    vehicleSelect.append(new Option(`Vehicle ID ${vehicle.vehicle_id} - ${vehicle.license_plate}`, vehicle.vehicle_id));
+                });
+            });
+        });
+
+        $('#exitForm').on('submit', function (event) {
+            event.preventDefault();
+            const vehicleId = $('#vehicleId').val();
+            
+            $.get(`/api/logs?vehicle_id=${vehicleId}`, function (logs) {
+                if (logs.length > 0) {
+                    const log = logs[0];
+                    $.ajax({
+                        url: `/api/logs/${log.log_id}`,
+                        type: 'DELETE',
+                        success: function (response) {
+                            alert('Vehicle removed successfully!');
+                            window.location.href = '/';
+                        },
+                        error: function () {
+                            alert('Error removing vehicle');
+                        }
+                    });
+                } else {
+                    alert('No logs found for this vehicle');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
