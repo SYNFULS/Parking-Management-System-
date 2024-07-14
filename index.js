@@ -1,30 +1,25 @@
 const express = require('express');
 const app = express();
-const port = 3000;
-const parkingRoutes = require('./routes/parking.routes');
+const path = require('path');
+const routes = require('./routes/parking.routes');
 
+// Middleware
 app.use(express.json());
-app.use(express.static('public')); // Serve static files from the public directory
+app.use(express.urlencoded({ extended: true }));
 
-app.use('/api', parkingRoutes);
+// Use routes defined in routes.js
+app.use('/api', routes); // Prefix all API routes with '/api'
 
+// Serve static files (HTML, CSS, JS) from the 'public' directory
+app.use(express.static(path.join(__dirname, 'views')));
+
+// Handle root route ('/')
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/views/index.html');
+    res.sendFile(path.join(__dirname, 'views', 'parking-lot.html'));
 });
 
-
-app.get('/add-parking-lot', (req, res) => {
-    res.sendFile(__dirname + '/views/add_parking_lot.html');
-});
-
-app.get('/entry', (req, res) => {
-    res.sendFile(__dirname + '/views/entry.html');
-});
-
-app.get('/exit', (req, res) => {
-    res.sendFile(__dirname + '/views/exit.html');
-});
-
-app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
+// Start server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server is running on port http://localhost:${PORT}`);
 });

@@ -1,13 +1,11 @@
 const ParkingModel = require('../models/parking.model');
 
-// Controller functions for handling requests
-
 const ParkingController = {
-    // ParkingLots
     getAllParkingLots: (req, res) => {
         ParkingModel.getAllParkingLots((err, results) => {
             if (err) {
-                res.status(500).json({ error: 'Database error' });
+                console.error(err);
+                res.status(500).json({ error: 'Internal server error' });
                 return;
             }
             res.json(results);
@@ -15,55 +13,26 @@ const ParkingController = {
     },
 
     getParkingLotById: (req, res) => {
-        const { id } = req.params;
-        ParkingModel.getParkingLotById(id, (err, results) => {
+        const lotId = req.params.id;
+        ParkingModel.getParkingLotById(lotId, (err, result) => {
             if (err) {
-                res.status(500).json({ error: 'Database error' });
+                console.error(err);
+                res.status(500).json({ error: 'Internal server error' });
                 return;
             }
-            res.json(results);
+            if (!result) {
+                res.status(404).json({ error: `Parking lot with id ${lotId} not found` });
+                return;
+            }
+            res.json(result);
         });
     },
 
-    createParkingLot: (req, res) => {
-        const data = req.body;
-        ParkingModel.createParkingLot(data, (err, results) => {
-            if (err) {
-                res.status(500).json({ error: 'Database error' });
-                return;
-            }
-            res.status(201).json({ message: 'Parking lot created', id: results.insertId });
-        });
-    },
-
-    updateParkingLot: (req, res) => {
-        const { id } = req.params;
-        const data = req.body;
-        ParkingModel.updateParkingLot(id, data, (err, results) => {
-            if (err) {
-                res.status(500).json({ error: 'Database error' });
-                return;
-            }
-            res.json({ message: 'Parking lot updated' });
-        });
-    },
-
-    deleteParkingLot: (req, res) => {
-        const { id } = req.params;
-        ParkingModel.deleteParkingLot(id, (err, results) => {
-            if (err) {
-                res.status(500).json({ error: 'Database error' });
-                return;
-            }
-            res.json({ message: 'Parking lot deleted' });
-        });
-    },
-
-    // ParkingSpaces
     getAllParkingSpaces: (req, res) => {
         ParkingModel.getAllParkingSpaces((err, results) => {
             if (err) {
-                res.status(500).json({ error: 'Database error' });
+                console.error(err);
+                res.status(500).json({ error: 'Internal server error' });
                 return;
             }
             res.json(results);
@@ -71,55 +40,71 @@ const ParkingController = {
     },
 
     getParkingSpaceById: (req, res) => {
-        const { id } = req.params;
-        ParkingModel.getParkingSpaceById(id, (err, results) => {
+        const spaceId = req.params.id;
+        ParkingModel.getParkingSpaceById(spaceId, (err, result) => {
             if (err) {
-                res.status(500).json({ error: 'Database error' });
+                console.error(err);
+                res.status(500).json({ error: 'Internal server error' });
                 return;
             }
-            res.json(results);
+            if (!result) {
+                res.status(404).json({ error: `Parking space with id ${spaceId} not found` });
+                return;
+            }
+            res.json(result);
         });
     },
 
     createParkingSpace: (req, res) => {
-        const data = req.body;
-        ParkingModel.createParkingSpace(data, (err, results) => {
+        const { lot_id, status } = req.body;
+        ParkingModel.createParkingSpace(lot_id, status, (err, result) => {
             if (err) {
-                res.status(500).json({ error: 'Database error' });
+                console.error(err);
+                res.status(500).json({ error: 'Internal server error' });
                 return;
             }
-            res.status(201).json({ message: 'Parking space created', id: results.insertId });
+            res.status(201).json({ message: 'Parking space created successfully', id: result.insertId });
         });
     },
 
     updateParkingSpace: (req, res) => {
-        const { id } = req.params;
-        const data = req.body;
-        ParkingModel.updateParkingSpace(id, data, (err, results) => {
+        const spaceId = req.params.id;
+        const { lot_id, status } = req.body;
+        ParkingModel.updateParkingSpace(spaceId, lot_id, status, (err, result) => {
             if (err) {
-                res.status(500).json({ error: 'Database error' });
+                console.error(err);
+                res.status(500).json({ error: 'Internal server error' });
                 return;
             }
-            res.json({ message: 'Parking space updated' });
+            if (result.affectedRows === 0) {
+                res.status(404).json({ error: `Parking space with id ${spaceId} not found` });
+                return;
+            }
+            res.json({ message: `Parking space with id ${spaceId} updated successfully` });
         });
     },
 
     deleteParkingSpace: (req, res) => {
-        const { id } = req.params;
-        ParkingModel.deleteParkingSpace(id, (err, results) => {
+        const spaceId = req.params.id;
+        ParkingModel.deleteParkingSpace(spaceId, (err, result) => {
             if (err) {
-                res.status(500).json({ error: 'Database error' });
+                console.error(err);
+                res.status(500).json({ error: 'Internal server error' });
                 return;
             }
-            res.json({ message: 'Parking space deleted' });
+            if (result.affectedRows === 0) {
+                res.status(404).json({ error: `Parking space with id ${spaceId} not found` });
+                return;
+            }
+            res.json({ message: `Parking space with id ${spaceId} deleted successfully` });
         });
     },
 
-    // Vehicles
     getAllVehicles: (req, res) => {
         ParkingModel.getAllVehicles((err, results) => {
             if (err) {
-                res.status(500).json({ error: 'Database error' });
+                console.error(err);
+                res.status(500).json({ error: 'Internal server error' });
                 return;
             }
             res.json(results);
@@ -127,55 +112,71 @@ const ParkingController = {
     },
 
     getVehicleById: (req, res) => {
-        const { id } = req.params;
-        ParkingModel.getVehicleById(id, (err, results) => {
+        const vehicleId = req.params.id;
+        ParkingModel.getVehicleById(vehicleId, (err, result) => {
             if (err) {
-                res.status(500).json({ error: 'Database error' });
+                console.error(err);
+                res.status(500).json({ error: 'Internal server error' });
                 return;
             }
-            res.json(results);
+            if (!result) {
+                res.status(404).json({ error: `Vehicle with id ${vehicleId} not found` });
+                return;
+            }
+            res.json(result);
         });
     },
 
     createVehicle: (req, res) => {
-        const data = req.body;
-        ParkingModel.createVehicle(data, (err, results) => {
+        const { license_plate, owner_name, owner_contact, vehicle_type } = req.body;
+        ParkingModel.createVehicle(license_plate, owner_name, owner_contact, vehicle_type, (err, result) => {
             if (err) {
-                res.status(500).json({ error: 'Database error' });
+                console.error(err);
+                res.status(500).json({ error: 'Internal server error' });
                 return;
             }
-            res.status(201).json({ message: 'Vehicle created', id: results.insertId });
+            res.status(201).json({ message: 'Vehicle created successfully', id: result.insertId });
         });
     },
 
     updateVehicle: (req, res) => {
-        const { id } = req.params;
-        const data = req.body;
-        ParkingModel.updateVehicle(id, data, (err, results) => {
+        const vehicleId = req.params.id;
+        const { license_plate, owner_name, owner_contact, vehicle_type } = req.body;
+        ParkingModel.updateVehicle(vehicleId, license_plate, owner_name, owner_contact, vehicle_type, (err, result) => {
             if (err) {
-                res.status(500).json({ error: 'Database error' });
+                console.error(err);
+                res.status(500).json({ error: 'Internal server error' });
                 return;
             }
-            res.json({ message: 'Vehicle updated' });
+            if (result.affectedRows === 0) {
+                res.status(404).json({ error: `Vehicle with id ${vehicleId} not found` });
+                return;
+            }
+            res.json({ message: `Vehicle with id ${vehicleId} updated successfully` });
         });
     },
 
     deleteVehicle: (req, res) => {
-        const { id } = req.params;
-        ParkingModel.deleteVehicle(id, (err, results) => {
+        const vehicleId = req.params.id;
+        ParkingModel.deleteVehicle(vehicleId, (err, result) => {
             if (err) {
-                res.status(500).json({ error: 'Database error' });
+                console.error(err);
+                res.status(500).json({ error: 'Internal server error' });
                 return;
             }
-            res.json({ message: 'Vehicle deleted' });
+            if (result.affectedRows === 0) {
+                res.status(404).json({ error: `Vehicle with id ${vehicleId} not found` });
+                return;
+            }
+            res.json({ message: `Vehicle with id ${vehicleId} deleted successfully` });
         });
     },
 
-    // EntryExitLogs
     getAllLogs: (req, res) => {
         ParkingModel.getAllLogs((err, results) => {
             if (err) {
-                res.status(500).json({ error: 'Database error' });
+                console.error(err);
+                res.status(500).json({ error: 'Internal server error' });
                 return;
             }
             res.json(results);
@@ -183,57 +184,72 @@ const ParkingController = {
     },
 
     getLogById: (req, res) => {
-        const { id } = req.params;
-        ParkingModel.getLogById(id, (err, results) => {
+        const logId = req.params.id;
+        ParkingModel.getLogById(logId, (err, result) => {
             if (err) {
-                res.status(500).json({ error: 'Database error' });
+                console.error(err);
+                res.status(500).json({ error: 'Internal server error' });
                 return;
             }
-            res.json(results);
+            if (!result) {
+                res.status(404).json({ error: `Entry/Exit log with id ${logId} not found` });
+                return;
+            }
+            res.json(result);
         });
     },
 
     createLog: (req, res) => {
-        const data = req.body;
-        ParkingModel.createLog(data, (err, results) => {
+        const { vehicle_id, parking_lot_id, entry_time, exit_time, amount } = req.body;
+        ParkingModel.createLog(vehicle_id, parking_lot_id, entry_time, exit_time, amount, (err, result) => {
             if (err) {
-                res.status(500).json({ error: 'Database error' });
+                console.error(err);
+                res.status(500).json({ error: 'Internal server error' });
                 return;
             }
-            res.status(201).json({ message: 'Log created', id: results.insertId });
+            res.status(201).json({ message: 'Entry/Exit log created successfully', id: result.insertId });
         });
     },
 
     updateLog: (req, res) => {
-        const { id } = req.params;
-        const data = req.body;
-        ParkingModel.updateLog(id, data, (err, results) => {
+        const logId = req.params.id;
+        const { vehicle_id, parking_lot_id, entry_time, exit_time, amount } = req.body;
+        ParkingModel.updateLog(logId, vehicle_id, parking_lot_id, entry_time, exit_time, amount, (err, result) => {
             if (err) {
-                res.status(500).json({ error: 'Database error' });
+                console.error(err);
+                res.status(500).json({ error: 'Internal server error' });
                 return;
             }
-            res.json({ message: 'Log updated' });
+            if (result.affectedRows === 0) {
+                res.status(404).json({ error: `Entry/Exit log with id ${logId} not found` });
+                return;
+            }
+            res.json({ message: `Entry/Exit log with id ${logId} updated successfully` });
         });
     },
-    
-
 
     deleteLog: (req, res) => {
-        const { id } = req.params;
-        ParkingModel.deleteLog(id, (err, results) => {
+        const logId = req.params.id;
+        ParkingModel.deleteLog(logId, (err, result) => {
             if (err) {
-                res.status(500).json({ error: 'Database error' });
+                console.error(err);
+                res.status(500).json({ error: 'Internal server error' });
                 return;
             }
-            res.json({ message: 'Log deleted' });
+            if (result.affectedRows === 0) {
+                res.status(404).json({ error: `Entry/Exit log with id ${logId} not found` });
+                return;
+            }
+            res.json({ message: `Entry/Exit log with id ${logId} deleted successfully` });
         });
     },
 
     getAvailableSpaces: (req, res) => {
-        const { parking_lot_id } = req.params;
-        ParkingModel.getAvailableSpaces(parking_lot_id, (err, results) => {
+        const parkingLotId = req.params.parking_lot_id;
+        ParkingModel.getAvailableSpaces(parkingLotId, (err, results) => {
             if (err) {
-                res.status(500).json({ error: 'Database error' });
+                console.error(err);
+                res.status(500).json({ error: 'Internal server error' });
                 return;
             }
             res.json(results);

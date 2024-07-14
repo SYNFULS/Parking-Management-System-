@@ -70,10 +70,10 @@ const ParkingModel = {
     },
 
     createVehicle: (data, callback) => {
-        const { license_plate, vehicle_type } = data;
+        const { license_plate, owner_name, owner_contact, vehicle_type, hourly_rate } = data;
         db.query(
-            'INSERT INTO Vehicles (license_plate, vehicle_type) VALUES (?, ?)',
-            [license_plate, vehicle_type],
+            'INSERT INTO Vehicles (license_plate, owner_name, owner_contact, vehicle_type, hourly_rate) VALUES (?, ?, ?, ?, ?)',
+            [license_plate, owner_name, owner_contact, vehicle_type, hourly_rate],
             callback
         );
     },
@@ -129,6 +129,5 @@ const ParkingModel = {
         db.query('SELECT * FROM ParkingSpaces WHERE parking_lot_id = ? AND is_available = 1', [parking_lot_id], callback);
     }
 };
-
 
 module.exports = ParkingModel;
