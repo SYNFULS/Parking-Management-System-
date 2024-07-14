@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let currentUser = null;
 
-<<<<<<< HEAD
+
 window.onload = function() {
     fetchParkingLots();
 };
@@ -62,7 +62,7 @@ function fetchAvailableSpaces(parkingLotId) {
         })
         .catch(error => console.error('Error fetching available spaces:', error));
 }
-=======
+
     // Static user credentials
     document.addEventListener('DOMContentLoaded', () => {
         const authForm = document.getElementById('auth-form');
@@ -127,7 +127,7 @@ function fetchAvailableSpaces(parkingLotId) {
         const selectedLotId = parkingLotSelect.value;
         fetchAvailableSlots(selectedLotId);
     });
->>>>>>> 98cacc25615570e456d045374b77ba3c59f88fe7
+
 
     // Fetch available slots for selected parking lot
     async function fetchAvailableSlots(parkingLotId) {
@@ -148,7 +148,7 @@ function fetchAvailableSpaces(parkingLotId) {
         }
     }
 
-<<<<<<< HEAD
+
 function addVehicleEntry() {
     const licensePlate = document.getElementById('license-plate').value;
     const ownerName = document.getElementById('owner-name').value;
@@ -197,7 +197,7 @@ function fetchAmount() {
         })
         .catch(error => console.error('Error fetching vehicle details:', error));
 }
-=======
+
     // Event listener for vehicle entry form
     entryForm.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -245,4 +245,3 @@ function fetchAmount() {
         }
     });
 });
->>>>>>> 98cacc25615570e456d045374b77ba3c59f88fe7

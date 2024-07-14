@@ -1,10 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const ParkingController = require('../controllers/parking.controller');
-const path = require('path');
-
-// Serve static files from the 'public' directory
-router.use(express.static(path.join(__dirname, '../public')));
 
 // ParkingLots routes
 router.get('/parking-lots', ParkingController.getAllParkingLots);
@@ -20,7 +16,7 @@ router.delete('/parking-spaces/:id', ParkingController.deleteParkingSpace);
 // Vehicles routes
 router.get('/vehicles', ParkingController.getAllVehicles);
 router.get('/vehicles/:id', ParkingController.getVehicleById);
-router.post('/vehicles', ParkingController.createVehicle);
+router.post('/vehicles', ParkingController.createVehicle); // Corrected route
 router.put('/vehicles/:id', ParkingController.updateVehicle);
 router.delete('/vehicles/:id', ParkingController.deleteVehicle);
 
