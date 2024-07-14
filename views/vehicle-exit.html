@@ -7,12 +7,13 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Vehicle Exit</h1>
-        <input type="text" id="vehicle-id" placeholder="Vehicle ID">
-        <button onclick="fetchAmount()">Calculate Amount</button>
-        <div id="amount"></div>
-    </div>
+    <h1>Vehicle Exit</h1>
+    <form id="exit-form">
+        <label for="vehicle-id">Vehicle ID:</label>
+        <input type="text" id="vehicle-id" name="vehicle-id" required>
+        <button type="submit">Submit</button>
+    </form>
+    <div id="amount-display"></div>
     <script src="script.js"></script>
 </body>
 </html>

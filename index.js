@@ -14,15 +14,19 @@ app.get('/', (req, res) => {
 
 
 app.get('/add-parking-lot', (req, res) => {
-    res.sendFile(__dirname + '/views/add_parking_lot.html');
+    res.sendFile(__dirname + '/views/parking-lot.html');
+});
+
+app.get('/add-parking-lot', (req, res) => {
+    res.sendFile(__dirname + '/views/parking-lots.html');
 });
 
 app.get('/entry', (req, res) => {
-    res.sendFile(__dirname + '/views/entry.html');
+    res.sendFile(__dirname + '/views/vehicle-entry.html');
 });
 
 app.get('/exit', (req, res) => {
-    res.sendFile(__dirname + '/views/exit.html');
+    res.sendFile(__dirname + '/views/vehicle-exit.html');
 });
 
 app.listen(port, () => {
