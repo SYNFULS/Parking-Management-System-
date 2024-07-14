@@ -7,14 +7,16 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Vehicle Entry</h1>
-        <input type="text" id="license-plate" placeholder="License Plate">
-        <input type="text" id="owner-name" placeholder="Owner Name">
-        <input type="text" id="owner-contact" placeholder="Owner Contact">
-        <input type="text" id="vehicle-type" placeholder="Vehicle Type">
-        <button onclick="addVehicleEntry()">Submit</button>
-    </div>
+    <h1>Vehicle Entry</h1>
+    <form id="entry-form">
+        <label for="license-plate">License Plate:</label>
+        <input type="text" id="license-plate" name="license-plate" required>
+        <label for="owner-name">Owner Name:</label>
+        <input type="text" id="owner-name" name="owner-name" required>
+        <label for="owner-contact">Owner Contact:</label>
+        <input type="text" id="owner-contact" name="owner-contact" required>
+        <button type="submit">Submit</button>
+    </form>
     <script src="script.js"></script>
 </body>
 </html>

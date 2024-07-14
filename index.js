@@ -18,8 +18,31 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'parking-lot.html'));
 });
 
+<<<<<<< HEAD
 // Start server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server is running on port http://localhost:${PORT}`);
 });
+=======
+
+app.get('/add-parking-lot', (req, res) => {
+    res.sendFile(__dirname + '/views/parking-lot.html');
+});
+
+app.get('/add-parking-lot', (req, res) => {
+    res.sendFile(__dirname + '/views/parking-lots.html');
+});
+
+app.get('/entry', (req, res) => {
+    res.sendFile(__dirname + '/views/vehicle-entry.html');
+});
+
+app.get('/exit', (req, res) => {
+    res.sendFile(__dirname + '/views/vehicle-exit.html');
+});
+
+app.listen(port, () => {
+    console.log(`Server running at http://localhost:${port}`);
+});
+>>>>>>> 98cacc25615570e456d045374b77ba3c59f88fe7
