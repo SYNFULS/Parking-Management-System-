@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
             parkingLotSelect.innerHTML = '<option value="">Select a parking lot</option>'; // Reset options
             parkingLots.forEach(lot => {
                 const option = document.createElement('option');
-                option.value = lot.id;
+                option.value = lot.parking_lot_id;
                 option.textContent = lot.lot_name || 'Unnamed Lot'; // Ensure the name is set
                 parkingLotSelect.appendChild(option);
                 console.log(`Added lot: ${option.textContent}`); // Log the lot name
@@ -72,8 +72,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 const data = await response.json();
                 const lotDetails = document.getElementById('parking-lot-details');
                 lotDetails.innerHTML = `
-                    <h2>${data.lot_name}</h2>
-                    <p>Location: ${data.location}</p>
+                    <h2>${data[0].lot_name}</h2>
+                    <p>Location: ${data[0].location}</p>
                 `;
                 fetchAvailableSpaces(selectedLotId);
             } catch (error) {
@@ -86,7 +86,6 @@ document.addEventListener('DOMContentLoaded', () => {
             slotsContainer.innerHTML = '';
         }
     }
-
     // Fetch available spaces for selected parking lot
     async function fetchAvailableSpaces(parkingLotId) {
         try {
