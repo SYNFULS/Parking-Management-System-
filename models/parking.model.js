@@ -40,19 +40,19 @@ const ParkingModel = {
     },
 
     createParkingSpace: (data, callback) => {
-        const { parking_lot_id, space_number, is_available } = data;
+        const { parking_lot_id, space_number, is_occupied} = data;
         db.query(
-            'INSERT INTO ParkingSpaces (parking_lot_id, space_number, is_available) VALUES (?, ?, ?)',
-            [parking_lot_id, space_number, is_available],
+            'INSERT INTO ParkingSpaces (parking_lot_id, space_number, is_occupied) VALUES (?, ?, ?)',
+            [parking_lot_id, space_number, is_occupied],
             callback
         );
     },
 
     updateParkingSpace: (id, data, callback) => {
-        const { parking_lot_id, space_number, is_available } = data;
+        const { parking_lot_id, space_number, is_occupied} = data;
         db.query(
-            'UPDATE ParkingSpaces SET parking_lot_id = ?, space_number = ?, is_available = ? WHERE space_id = ?',
-            [parking_lot_id, space_number, is_available, id],
+            'UPDATE ParkingSpaces SET parking_lot_id = ?, space_number = ?, is_occupied = ? WHERE space_id = ?',
+            [parking_lot_id, space_number, is_occupied, id],
             callback
         );
     },
@@ -126,7 +126,7 @@ const ParkingModel = {
     },
 
     getAvailableSpaces: (parking_lot_id, callback) => {
-        db.query('SELECT * FROM ParkingSpaces WHERE parking_lot_id = ? AND is_available = 1', [parking_lot_id], callback);
+        db.query('SELECT * FROM ParkingSpaces WHERE parking_lot_id = ? AND is_occupied = 1', [parking_lot_id], callback);
     }
 };
 

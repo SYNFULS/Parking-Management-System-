@@ -2,7 +2,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const authForm = document.getElementById('auth-form');
     const authErrorMessage = document.getElementById('auth-error');
     const parkingLotSelect = document.getElementById('parking-lots');
-    const selectLotButton = document.getElementById('select-lot-button');
     const slotsContainer = document.getElementById('slots-container');
     const entryForm = document.getElementById('entry-form');
     const exitForm = document.getElementById('exit-form');
@@ -22,20 +21,23 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Event listener for authentication form
-    authForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const username = authForm.elements['username'].value;
-        const password = authForm.elements['password'].value;
-        const authenticatedUser = authenticate(username, password);
+    if (authForm) {
+        authForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = authForm.elements['username'].value;
+            const password = authForm.elements['password'].value;
+            const authenticatedUser = authenticate(username, password);
 
-        if (authenticatedUser) {
-            authErrorMessage.style.display = 'none';
-            authForm.reset();
-            window.location.href = './parking-lots.html'; // Navigate to the parking lots page
-        } else {
-            authErrorMessage.style.display = 'block';
-        }
-    });
+            if (authenticatedUser) {
+                authErrorMessage.style.display = 'none';
+                authForm.reset();
+                currentUser = authenticatedUser; // Set the current user
+                window.location.href = './parking-lots.html'; // Navigate to the parking lots page
+            } else {
+                authErrorMessage.style.display = 'block';
+            }
+        });
+    }
 
     // Fetch parking lots and populate select options
     async function fetchParkingLots() {
@@ -45,12 +47,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error('Network response was not ok');
             }
             const parkingLots = await response.json();
-            const parkingLotSelect = document.getElementById('parking-lots');
+            parkingLotSelect.innerHTML = '<option value="">Select a parking lot</option>'; // Reset options
             parkingLots.forEach(lot => {
                 const option = document.createElement('option');
                 option.value = lot.id;
-                option.textContent = lot.name;
+                option.textContent = lot.lot_name || 'Unnamed Lot'; // Ensure the name is set
                 parkingLotSelect.appendChild(option);
+                console.log(`Added lot: ${option.textContent}`); // Log the lot name
             });
         } catch (error) {
             console.error('Error fetching parking lots:', error);
@@ -58,114 +61,92 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Function to show parking lot details
-    function showParkingLot() {
-        const selectedLotId = document.getElementById('parking-lots').value;
-        fetchParkingLots();
+    async function showParkingLot() {
+        const selectedLotId = parkingLotSelect.value;
         if (selectedLotId) {
-            fetch(`/api/parking-lots/${selectedLotId}`)
-                .then(response => response.json())
-                .then(data => {
-                    const lotDetails = document.getElementById('parking-lot-details');
-                    lotDetails.innerHTML = `
-                        <h2>${data.name}</h2>
-                        <p>Location: ${data.location}</p>
-                    `;
-                    fetchAvailableSpaces(selectedLotId);
-                })
-                .catch(error => console.error('Error fetching parking lot details:', error));
+            try {
+                const response = await fetch(`/api/parking-lots/${selectedLotId}`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch parking lot details');
+                }
+                const data = await response.json();
+                const lotDetails = document.getElementById('parking-lot-details');
+                lotDetails.innerHTML = `
+                    <h2>${data.lot_name}</h2>
+                    <p>Location: ${data.location}</p>
+                `;
+                fetchAvailableSpaces(selectedLotId);
+            } catch (error) {
+                console.error('Error fetching parking lot details:', error);
+            }
+        } else {
+            // Clear details if no parking lot selected
+            const lotDetails = document.getElementById('parking-lot-details');
+            lotDetails.innerHTML = '';
+            slotsContainer.innerHTML = '';
         }
     }
 
     // Fetch available spaces for selected parking lot
-    function fetchAvailableSpaces(parkingLotId) {
-        fetch(`/api/available-spaces/${parkingLotId}`)
-            .then(response => response.json())
-            .then(data => {
-                const availableSpacesList = document.getElementById('available-spaces');
-                availableSpacesList.innerHTML = '';
-                data.forEach(space => {
-                    const listItem = document.createElement('li');
-                    listItem.textContent = `Space ID: ${space.id}, Status: ${space.status}`;
-                    availableSpacesList.appendChild(listItem);
-                });
-            })
-            .catch(error => console.error('Error fetching available spaces:', error));
-    }
-
-    // Event listener for selecting a parking lot
-    selectLotButton.addEventListener('click', () => {
-        const selectedLotId = parkingLotSelect.value;
-        fetchAvailableSlots(selectedLotId);
-    });
-
-    // Fetch available slots for selected parking lot
-    async function fetchAvailableSlots(parkingLotId) {
+    async function fetchAvailableSpaces(parkingLotId) {
         try {
             const response = await fetch(`/api/available-spaces/${parkingLotId}`);
             if (!response.ok) {
-                throw new Error('Failed to fetch available slots');
+                throw new Error('Failed to fetch available spaces');
             }
-            const availableSlots = await response.json();
+            const data = await response.json();
             slotsContainer.innerHTML = '';
-            availableSlots.forEach(slot => {
-                const div = document.createElement('div');
-                div.textContent = `Slot: ${slot.space_number} (Type: ${slot.space_type})`;
-                slotsContainer.appendChild(div);
+            data.forEach(space => {
+                const listItem = document.createElement('li');
+                listItem.textContent = `Space ID: ${space.id}, Status: ${space.status}`;
+                slotsContainer.appendChild(listItem);
             });
         } catch (error) {
-            console.error('Error fetching available slots:', error);
+            console.error('Error fetching available spaces:', error);
         }
     }
 
-    // Event listener for vehicle entry form
-    entryForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        if (!currentUser) {
-            alert('Please log in first.');
-            return;
-        }
-        try {
-            const formData = new FormData(entryForm);
-            const data = Object.fromEntries(formData.entries());
-            const response = await fetch('/api/vehicles', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data),
-            });
-            if (!response.ok) {
-                throw new Error('Failed to add vehicle');
-            }
-            alert('Vehicle entry recorded');
-            entryForm.reset();
-        } catch (error) {
-            console.error('Error adding vehicle:', error);
-        }
-    });
-    
-    function vehicleEntry() {
-        window.location.href = 'vehicle-entry.html';
-    };
-    
+    // Event listener for selecting a parking lot
+    parkingLotSelect.addEventListener('change', showParkingLot);
 
-    // Event listener for vehicle exit form
-    exitForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        if (!currentUser) {
-            alert('Please log in first.');
-            return;
-        }
-        try {
-            const formData = new FormData(exitForm);
-            const vehicleId = formData.get('vehicle-id');
-            const response = await fetch(`/api/logs/${vehicleId}`, { method: 'PUT' });
-            if (!response.ok) {
-                throw new Error('Failed to update log');
+    // Fetch parking lots on page load if the parking lot select exists
+    if (parkingLotSelect) {
+        fetchParkingLots();
+    }
+
+    // Event listener for vehicle entry form (dummy function)
+    if (entryForm) {
+        entryForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!currentUser) {
+                alert('Please log in first.');
+                return;
             }
-            const log = await response.json();
-            amountDisplay.textContent = `Amount: ${log.amount}`;
-            exitForm.reset();
-        } catch (error) {
-            console.error('Error updating log:', error);
-        }
-    });
+            try {
+                // Implement your vehicle entry logic here
+                alert('Vehicle entry recorded'); // Dummy alert
+                entryForm.reset();
+            } catch (error) {
+                console.error('Error adding vehicle:', error);
+            }
+        });
+    }
+
+    // Event listener for vehicle exit form (dummy function)
+    if (exitForm) {
+        exitForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!currentUser) {
+                alert('Please log in first.');
+                return;
+            }
+            try {
+                // Implement your vehicle exit logic here
+                alert('Vehicle exit recorded'); // Dummy alert
+                exitForm.reset();
+            } catch (error) {
+                console.error('Error updating log:', error);
+            }
+        });
+    }
 });

@@ -1,7 +1,6 @@
 {
   "name": "parking-management-system",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -16,5 +15,14 @@
     "lru-cache": "^10.3.0",
     "mysql2": "^3.10.2",
     "node": "^22.4.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SYNFULS/Parking-Management-System-.git"
+  },
+  "bugs": {
+    "url": "https://github.com/SYNFULS/Parking-Management-System-/issues"
+  },
+  "homepage": "https://github.com/SYNFULS/Parking-Management-System-#readme",
+  "description": ""
 }
