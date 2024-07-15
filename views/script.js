@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (authenticatedUser) {
             authErrorMessage.style.display = 'none';
             authForm.reset();
-            window.location.href = './parking-lot.html'; // Navigate to the parking lots page
+            window.location.href = './parking-lots.html'; // Navigate to the parking lots page
         } else {
             authErrorMessage.style.display = 'block';
         }
@@ -60,6 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Function to show parking lot details
     function showParkingLot() {
         const selectedLotId = document.getElementById('parking-lots').value;
+        fetchParkingLots();
         if (selectedLotId) {
             fetch(`/api/parking-lots/${selectedLotId}`)
                 .then(response => response.json())
