@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
             slotsContainer.innerHTML = '';
             data.forEach(space => {
                 const listItem = document.createElement('li');
-                listItem.textContent = `Space ID: ${space.id}, Status: ${space.status}`;
+                listItem.textContent = `Space ID: ${space.space_id}, Status: ${space.is_occupied}`;
                 slotsContainer.appendChild(listItem);
             });
         } catch (error) {

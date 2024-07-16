@@ -126,7 +126,7 @@ const ParkingModel = {
     },
 
     getAvailableSpaces: (parking_lot_id, callback) => {
-        db.query('SELECT * FROM ParkingSpaces WHERE parking_lot_id = ? AND is_occupied = 1', [parking_lot_id], callback);
+        db.query('SELECT * FROM ParkingSpaces WHERE parking_lot_id = ? AND is_occupied = 0', [parking_lot_id], callback);
     }
 };
 
