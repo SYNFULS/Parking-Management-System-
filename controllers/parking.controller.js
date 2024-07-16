@@ -128,8 +128,8 @@ const ParkingController = {
     },
 
     createVehicle: (req, res) => {
-        const { license_plate, owner_name, owner_contact, vehicle_type } = req.body;
-        ParkingModel.createVehicle(license_plate, owner_name, owner_contact, vehicle_type, (err, result) => {
+        const { license_plate, owner_name, owner_contact, vehicle_type,hourly_rate } = req.body;
+        ParkingModel.createVehicle(license_plate, owner_name, owner_contact, vehicle_type,hourly_rate, (err, result) => {
             if (err) {
                 console.error(err);
                 res.status(500).json({ error: 'Internal server error' });

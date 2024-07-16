@@ -128,16 +128,24 @@ document.addEventListener('DOMContentLoaded', () => {
     fetchParkingLots();
     // go to vehicle entry page 
     
-    // Event listener for vehicle entry form (dummy function)
+    // Event listener for vehicle entry form
     if (entryForm) {
         entryForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            if (!currentUser) {
-                alert('Please log in first.');
-                return;
-            }
             try {
-                // Implement your vehicle entry logic here
+                const formData = new FormData(entryForm);
+                const data = Object.fromEntries(formData.entries());
+                console.log('Form Data:', data); // Debug log for form data
+                const response = await fetch('/api/vehicles', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data),
+                });
+                if (!response.ok) {
+                    throw new Error('Failed to add vehicle');
+                }
+                const result = await response.json();
+                console.log('API Response:', result);
                 alert('Vehicle entry recorded'); // Dummy alert
                 entryForm.reset();
             } catch (error) {
