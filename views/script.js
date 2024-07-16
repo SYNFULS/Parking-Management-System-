@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const entryForm = document.getElementById('entry-form');
     const exitForm = document.getElementById('exit-form');
     const amountDisplay = document.getElementById('amount-display');
+    const viewParkingLotButton = document.getElementById('view-parking-lot');
 
     let currentUser = null;
 
@@ -111,11 +112,22 @@ document.addEventListener('DOMContentLoaded', () => {
         parkingLotSelect.addEventListener('change', showParkingLot);
     }
 
-    // Fetch parking lots on page load if the parking lot select exists
-    if (parkingLotSelect) {
-        fetchParkingLots();
+    // Event listener for view parking lot button
+    if (viewParkingLotButton) {
+        viewParkingLotButton.addEventListener('click', () => {
+            const selectedLotId = parkingLotSelect.value;
+            if (selectedLotId) {
+                window.location.href = `./parking-lot.html?lotId=${selectedLotId}`;
+            } else {
+                alert('Please select a parking lot first.');
+            }
+        });
     }
 
+    // Fetch parking lots on page load if the parking lot select exists
+    fetchParkingLots();
+    // go to vehicle entry page 
+    
     // Event listener for vehicle entry form (dummy function)
     if (entryForm) {
         entryForm.addEventListener('submit', async (e) => {
