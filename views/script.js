@@ -86,6 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
             slotsContainer.innerHTML = '';
         }
     }
+
     // Fetch available spaces for selected parking lot
     async function fetchAvailableSpaces(parkingLotId) {
         try {
@@ -106,7 +107,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Event listener for selecting a parking lot
-    parkingLotSelect.addEventListener('change', showParkingLot);
+    if (parkingLotSelect) {
+        parkingLotSelect.addEventListener('change', showParkingLot);
+    }
 
     // Fetch parking lots on page load if the parking lot select exists
     if (parkingLotSelect) {
@@ -148,4 +151,25 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    // Function to toggle the menu
+    window.toggleMenu = function() {
+        const menuContent = document.querySelector('.menu-content');
+        menuContent.classList.toggle('show');
+    };
+
+    // Function to handle logout
+    window.logout = function() {
+        currentUser = null;
+        window.location.href = 'index.html';
+    };
+
+    // Add event listener to close menu when clicking outside of it
+    document.addEventListener('click', function(event) {
+        const menuContent = document.querySelector('.menu-content');
+        const menuIcon = document.querySelector('.menu-icon');
+        if (menuContent && menuIcon && !menuContent.contains(event.target) && !menuIcon.contains(event.target)) {
+            menuContent.classList.remove('show');
+        }
+    });
 });
