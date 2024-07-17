@@ -199,6 +199,7 @@ if (entryForm) {
         const fasidValue = getFasidFromCookie();
         console.log("After Form Submission, fasid:", fasidValue);
         updateParkingSpace(fasidValue, 1);
+        createlog(vehicle_id,fasidValue);
     });
 }
 
@@ -230,13 +231,12 @@ async function updateParkingSpace(space_id, is_occupied) {
 
 
 const createLog = async (vehicle_id, space_id) => {
-    const entry_time = new Date().toISOString(); // Set current date and time as entry time
+    const entry_time = new Date().getHours // Set current date and time as entry time
 
     const data = {
         vehicle_id,
         space_id,
-        entry_time,
-        exit_time: null // Setting exit time as null initially
+        entry_time
     };
 
     try {
