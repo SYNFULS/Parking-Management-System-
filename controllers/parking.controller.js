@@ -200,8 +200,8 @@ const ParkingController = {
     },
 
     createLog: (req, res) => {
-        const { license_plate, parking_lot_id, entry_time} = req.body;
-        ParkingModel.createLog({license_plate, parking_lot_id, entry_time},(err, result) => {
+        const { license_plate, space_id, entry_time} = req.body;
+        ParkingModel.createLog({license_plate, space_id, entry_time},(err, result) => {
             if (err) {
                 console.error(err);
                 res.status(500).json({ error: 'Internal server error' });
