@@ -25,7 +25,7 @@ router.put('/vehicles/:id', ParkingController.updateVehicle);
 router.delete('/vehicles/:id', ParkingController.deleteVehicle);
 
 // EntryExitLogs routes
-router.get('/logs', ParkingController.getAllLogs);
+router.get('/alllogs', ParkingController.getAllLogs);
 router.get('/logs/:id', ParkingController.getLogById);
 router.post('/logs', ParkingController.createLog);
 router.put('/logs/:id', ParkingController.updateLog);
