@@ -77,10 +77,10 @@ const ParkingModel = {
     },
 
     createLog: (data, callback) => {
-        const { vehicle_id, space_id, entry_time, exit_time } = data;
+        const { vehicle_id, space_id, entry_time} = data;
         db.query(
-            'INSERT INTO EntryExitLogs (vehicle_id, space_id, entry_time, exit_time) VALUES (?, ?, ?, ?)',
-            [vehicle_id, space_id, entry_time, exit_time],
+            'INSERT INTO EntryExitLogs (vehicle_id, space_id, entry_time) VALUES (?, ?, ?)',
+            [vehicle_id, space_id, entry_time],
             callback
         );
     },
