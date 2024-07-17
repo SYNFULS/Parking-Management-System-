@@ -49,10 +49,13 @@ const ParkingModel = {
     },
 
     updateParkingSpace: (id, data, callback) => {
-        const { parking_lot_id, space_number, is_occupied} = data;
+
+        const { space_id, is_occupied } = data;
+  
         db.query(
-            'UPDATE ParkingSpaces SET parking_lot_id = ?, space_number = ?, is_occupied = ? WHERE space_id = ?',
-            [parking_lot_id, space_number, is_occupied, id],
+            'UPDATE ParkingSpaces SET is_occupied = ? WHERE space_id = ?',
+            [ is_occupied,space_id ],
+
             callback
         );
     },

@@ -68,9 +68,9 @@ const ParkingController = {
     },
 
     updateParkingSpace: (req, res) => {
-        const spaceId = req.params.id;
-        const { lot_id, status } = req.body;
-        ParkingModel.updateParkingSpace(spaceId, lot_id, status, (err, result) => {
+
+        const { spaceId,os_occupied } = req.body;
+        ParkingModel.updateParkingSpace(spaceId,is_occupied, (err, result) => {
             if (err) {
                 console.error(err);
                 res.status(500).json({ error: 'Internal server error' });
