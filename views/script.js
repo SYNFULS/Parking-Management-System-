@@ -8,7 +8,7 @@ const viewParkingLotButton = document.getElementById('view-parking-lot');
 const authForm = document.getElementById('auth-form'); // Ensure you have this line
 
 let currentUser = null;
-let firstAvailableSpaceId=null;
+let firstAvailableSpaceId = null;
 
 // Static user credentials
 const users = [
@@ -97,7 +97,7 @@ async function fetchAvailableSpaces(parkingLotId) {
         }
         const data = await response.json();
         slotsContainer.innerHTML = '';
-         // Reset first available space ID
+        firstAvailableSpaceId = null; // Reset first available space ID
         data.forEach(space => {
             const listItem = document.createElement('li');
             listItem.textContent = `Space ID: ${space.space_id}, Status: ${space.is_occupied ? 'Occupied' : 'Available'}`;
@@ -130,47 +130,53 @@ if (viewParkingLotButton) {
     });
 }
 
-function setsid(sid)
-{
-    fasid=sid;
-    console.log("fasid set",fasid);
-    // Set a cookie with name, value, and optional expiration
-    document.cookie = "cookiefasid=${fasid}; path=/";
-
+function setCookie(name, value, days) {
+    const date = new Date();
+    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+    const expires = "expires=" + date.toUTCString();
+    document.cookie = name + "=" + value + ";" + expires + ";path=/";
 }
 
-function getCookie(cookieName) {
-    var name = cookieName + "=";
-    var decodedCookie = decodeURIComponent(document.cookie);
-    var cookieArray = decodedCookie.split(';');
-    
-    for(var i = 0; i < cookieArray.length; i++) {
-        var cookie = cookieArray[i].trim();
-        if (cookie.indexOf(name) == 0) {
-            return cookie.substring(name.length, cookie.length);
-        }
+function getCookie(name) {
+    const nameEQ = name + "=";
+    const ca = document.cookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
     }
-    return "";
+    return null;
 }
 
+function setFasidCookie(fasid) {
+    setCookie('fasid', fasid, 1); // Setting cookie to expire in 1 day
+    console.log("fasid set in cookie:", fasid);
+}
 
+// Function to call when setting `fasid`
+function setsid(sid) {
+    console.log("Setting fasid:", sid);
+    setFasidCookie(sid);
+}
 
-
-
+function getFasidFromCookie() {
+    const fasid = getCookie('fasid');
+    console.log("Retrieved fasid from cookie:", fasid);
+    return fasid;
+}
 
 // Fetch parking lots on page load if the parking lot select exists
 fetchParkingLots();
 
 // Event listener for vehicle entry form
 if (entryForm) {
-    
     entryForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-    
         const formData = new FormData(entryForm);
         const data = Object.fromEntries(formData.entries());
-        const { license_plate, owner_name,owner_contact,vehicle_type } = data;
+        const { license_plate, owner_name, owner_contact, vehicle_type } = data;
+
         try {
             const response = await fetch('/api/vehicles', {
                 method: 'POST',
@@ -189,46 +195,12 @@ if (entryForm) {
             console.error('Error submitting vehicle entry:', error);
             alert('Failed to submit vehicle entry');
         }
-        
-        var fasidValue = getCookie('cookiefasid');
-        console.log("After Foem",fasidValue);
+
+        const fasidValue = getFasidFromCookie();
+        console.log("After Form Submission, fasid:", fasidValue);
         updateParkingSpace(fasidValue, 1);
     });
 }
-
-const createLog = async (vehicle_id, space_id) => {
-    const entry_time = new Date().getHours; // Set current date and time as entry time
-
-    const data = {
-        vehicle_id,
-        space_id,
-        entry_time,
-        exit_time: null // Setting exit time as null initially
-    };
-
-    try {
-        const response = await fetch('/api/logs', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        });
-
-        if (!response.ok) {
-            throw new Error('Failed to create log entry');
-        }
-
-        const result = await response.json();
-        console.log(result.message); // Optional: log success message or handle response
-        return result; // Optionally return any response data
-    } catch (error) {
-        console.error('Error creating log entry:', error);
-        throw new Error('Failed to create log entry');
-    }
-};
-
-
 
 // Function to update parking space status
 async function updateParkingSpace(space_id, is_occupied) {
@@ -246,7 +218,7 @@ async function updateParkingSpace(space_id, is_occupied) {
             body: JSON.stringify(data)
         });
         if (!response.ok) {
-            throw new Error('Failed to update 65parking space');
+            throw new Error('Failed to update parking space');
         }
         const result = await response.json();
         console.log(result.message);
@@ -260,7 +232,7 @@ async function updateParkingSpace(space_id, is_occupied) {
 if (exitForm) {
     exitForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-     
+
         try {
             // Implement your vehicle exit logic here
             alert('Vehicle exit recorded'); // Dummy alert
@@ -290,4 +262,10 @@ document.addEventListener('click', function(event) {
     if (menuContent && menuIcon && !menuContent.contains(event.target) && !menuIcon.contains(event.target)) {
         menuContent.classList.remove('show');
     }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    const fasidValue = getFasidFromCookie();
+    console.log("On Page Load, fasid:", fasidValue);
+    // Use `fasidValue` as needed
 });
