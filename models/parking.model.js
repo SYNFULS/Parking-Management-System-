@@ -9,27 +9,8 @@ const ParkingModel = {
         db.query('SELECT * FROM ParkingLots WHERE parking_lot_id = ?', [id], callback);
     },
 
-    createParkingLot: (data, callback) => {
-        const { lot_name, location, total_spaces, available_spaces, contact_number } = data;
-        db.query(
-            'INSERT INTO ParkingLots (lot_name, location, total_spaces, available_spaces, contact_number) VALUES (?, ?, ?, ?, ?)',
-            [lot_name, location, total_spaces, available_spaces, contact_number],
-            callback
-        );
-    },
 
-    updateParkingLot: (id, data, callback) => {
-        const { lot_name, location, total_spaces, available_spaces, contact_number } = data;
-        db.query(
-            'UPDATE ParkingLots SET lot_name = ?, location = ?, total_spaces = ?, available_spaces = ?, contact_number = ? WHERE parking_lot_id = ?',
-            [lot_name, location, total_spaces, available_spaces, contact_number, id],
-            callback
-        );
-    },
 
-    deleteParkingLot: (id, callback) => {
-        db.query('DELETE FROM ParkingLots WHERE parking_lot_id = ?', [id], callback);
-    },
 
     getAllParkingSpaces: (callback) => {
         db.query('SELECT * FROM ParkingSpaces', callback);
@@ -39,16 +20,9 @@ const ParkingModel = {
         db.query('SELECT * FROM ParkingSpaces WHERE space_id = ?', [id], callback);
     },
 
-    createParkingSpace: (data, callback) => {
-        const { parking_lot_id, space_number, is_occupied} = data;
-        db.query(
-            'INSERT INTO ParkingSpaces (parking_lot_id, space_number, is_occupied) VALUES (?, ?, ?)',
-            [parking_lot_id, space_number, is_occupied],
-            callback
-        );
-    },
 
-    updateParkingSpace: (id, data, callback) => {
+
+    updateParkingSpace: (data, callback) => {
 
         const { space_id, is_occupied } = data;
   
@@ -73,7 +47,7 @@ const ParkingModel = {
     },
 
     createVehicle: (data, callback) => {
-        const { license_plate, owner_name, owner_contact, vehicle_type, hourly_rate } = data;
+        const { license_plate, owner_name, owner_contact, vehicle_type, hourly_rate,space_id } = data;
         db.query(
             'INSERT INTO Vehicles (license_plate, owner_name, owner_contact, vehicle_type, hourly_rate) VALUES (?, ?, ?, ?, ?)',
             [license_plate, owner_name, owner_contact, vehicle_type, hourly_rate],

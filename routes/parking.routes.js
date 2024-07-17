@@ -10,11 +10,11 @@ router.get('/parking-lots/:id', ParkingController.getParkingLotById);
 router.get('/parking-spaces', ParkingController.getAllParkingSpaces);
 router.get('/parking-spaces/:id', ParkingController.getParkingSpaceById);
 router.post('/parking-spaces', ParkingController.createParkingSpace);
-router.put('/parking-spaces/:id', ParkingController.updateParkingSpace);
+router.put('/update-parking-spaces', ParkingController.updateParkingSpace);
 router.delete('/parking-spaces/:id', ParkingController.deleteParkingSpace);
 
 // Vehicles routes
-router.get('/vehicles', ParkingController.getAllVehicles);
+router.get('/allvehicles', ParkingController.getAllVehicles);
 router.get('/vehicles/:id', ParkingController.getVehicleById);
 router.post('/vehicles', ParkingController.createVehicle); // Corrected route
 router.put('/vehicles/:id', ParkingController.updateVehicle);

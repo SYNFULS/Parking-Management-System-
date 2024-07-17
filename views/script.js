@@ -8,7 +8,7 @@ const viewParkingLotButton = document.getElementById('view-parking-lot');
 const authForm = document.getElementById('auth-form'); // Ensure you have this line
 
 let currentUser = null;
-let firstAvailableSpaceId = null;
+let firstAvailableSpaceId=null;
 
 // Static user credentials
 const users = [
@@ -97,7 +97,7 @@ async function fetchAvailableSpaces(parkingLotId) {
         }
         const data = await response.json();
         slotsContainer.innerHTML = '';
-        firstAvailableSpaceId = null; // Reset first available space ID
+         // Reset first available space ID
         data.forEach(space => {
             const listItem = document.createElement('li');
             listItem.textContent = `Space ID: ${space.space_id}, Status: ${space.is_occupied ? 'Occupied' : 'Available'}`;
@@ -110,6 +110,7 @@ async function fetchAvailableSpaces(parkingLotId) {
     } catch (error) {
         console.error('Error fetching available spaces:', error);
     }
+    setsid(firstAvailableSpaceId);
 }
 
 // Event listener for selecting a parking lot
@@ -129,14 +130,43 @@ if (viewParkingLotButton) {
     });
 }
 
+function setsid(sid)
+{
+    fasid=sid;
+    console.log("fasid set",fasid);
+    // Set a cookie with name, value, and optional expiration
+    document.cookie = "cookiefasid=${fasid}; path=/";
+
+}
+
+function getCookie(cookieName) {
+    var name = cookieName + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var cookieArray = decodedCookie.split(';');
+    
+    for(var i = 0; i < cookieArray.length; i++) {
+        var cookie = cookieArray[i].trim();
+        if (cookie.indexOf(name) == 0) {
+            return cookie.substring(name.length, cookie.length);
+        }
+    }
+    return "";
+}
+
+
+
+
+
+
 // Fetch parking lots on page load if the parking lot select exists
 fetchParkingLots();
 
 // Event listener for vehicle entry form
 if (entryForm) {
+    
     entryForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        fetchAvailableSpaces();
+
     
         const formData = new FormData(entryForm);
         const data = Object.fromEntries(formData.entries());
@@ -159,13 +189,15 @@ if (entryForm) {
             console.error('Error submitting vehicle entry:', error);
             alert('Failed to submit vehicle entry');
         }
-        updateParkingSpace(firstAvailableSpaceId, 1);
-        createLog(license_plate, firstAvailableSpaceId);
+        
+        var fasidValue = getCookie('cookiefasid');
+        console.log("After Foem",fasidValue);
+        updateParkingSpace(fasidValue, 1);
     });
 }
 
 const createLog = async (vehicle_id, space_id) => {
-    const entry_time = new Date().toISOString(); // Set current date and time as entry time
+    const entry_time = new Date().getHours; // Set current date and time as entry time
 
     const data = {
         vehicle_id,
@@ -199,14 +231,14 @@ const createLog = async (vehicle_id, space_id) => {
 
 
 // Function to update parking space status
-async function updateParkingSpace(spaceId, isOccupied) {
+async function updateParkingSpace(space_id, is_occupied) {
     const data = {
-        space_id: spaceId,
-        is_occupied: isOccupied
+        space_id: space_id,
+        is_occupied: is_occupied
     };
 
     try {
-        const response = await fetch(`/api/parking-spaces/${spaceId}`, {
+        const response = await fetch(`/api/update-parking-spaces`, { // Use PUT
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -214,12 +246,12 @@ async function updateParkingSpace(spaceId, isOccupied) {
             body: JSON.stringify(data)
         });
         if (!response.ok) {
-            throw new Error('Failed to update parking space');
+            throw new Error('Failed to update 65parking space');
         }
         const result = await response.json();
         console.log(result.message);
     } catch (error) {
-        console.error('Error updating parking space:', error);
+        console.error(error);
         alert('Failed to update parking space');
     }
 }
@@ -228,10 +260,7 @@ async function updateParkingSpace(spaceId, isOccupied) {
 if (exitForm) {
     exitForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        if (!currentUser) {
-            alert('Please log in first.');
-            return;
-        }
+     
         try {
             // Implement your vehicle exit logic here
             alert('Vehicle exit recorded'); // Dummy alert

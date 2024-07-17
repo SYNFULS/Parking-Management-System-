@@ -68,19 +68,19 @@ const ParkingController = {
     },
 
     updateParkingSpace: (req, res) => {
-
-        const { spaceId,os_occupied } = req.body;
-        ParkingModel.updateParkingSpace(spaceId,is_occupied, (err, result) => {
+        var { space_id, is_occupied } = req.body;
+        console.log("From controller",space_id,is_occupied);
+        ParkingModel.updateParkingSpace({space_id,is_occupied}, (err, result) => {
             if (err) {
                 console.error(err);
                 res.status(500).json({ error: 'Internal server error' });
                 return;
             }
             if (result.affectedRows === 0) {
-                res.status(404).json({ error: `Parking space with id ${spaceId} not found` });
+                res.status(404).json({ error: `Parking space with id ${space_id} not found` });
                 return;
             }
-            res.json({ message: `Parking space with id ${spaceId} updated successfully` });
+            res.json({ message: `Parking space with id ${space_id} updated successfully` });
         });
     },
 
