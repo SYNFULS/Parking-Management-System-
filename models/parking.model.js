@@ -50,6 +50,7 @@ const ParkingModel = {
 
     updateParkingSpace: (id, data, callback) => {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         const { parking_lot_id, space_number, is_available } = data;
         db.query(
             'UPDATE ParkingSpaces SET parking_lot_id = ?, space_number = ?, is_available = ? WHERE space_id = ?',
@@ -59,6 +60,12 @@ const ParkingModel = {
         db.query(
             'UPDATE ParkingSpaces SET is_occupied = ? WHERE space_id = ?',
             [ is_occupied,space_number ],
+>>>>>>> Stashed changes
+=======
+        const {  space_id, is_occupied} = data;
+        db.query(
+            'UPDATE ParkingSpaces SET is_occupied = ? WHERE space_id = ?',
+            [ is_occupied,space_id ],
 >>>>>>> Stashed changes
             callback
         );

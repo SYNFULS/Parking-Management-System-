@@ -68,21 +68,25 @@ const ParkingController = {
     },
 
     updateParkingSpace: (req, res) => {
-        const spaceId = req.params.id;
-        const { lot_id, status } = req.body;
-        ParkingModel.updateParkingSpace(spaceId, lot_id, status, (err, result) => {
+        const { space_id, is_occupied } = req.body;
+        
+        // Ensure space_id is not undefined
+        if (typeof space_id === 'undefined' || typeof is_occupied === 'undefined') {
+            return res.status(400).json({ error: 'Invalid data provided' });
+        }
+    
+        ParkingModel.updateParkingSpace(space_id, is_occupied, (err, result) => {
             if (err) {
                 console.error(err);
-                res.status(500).json({ error: 'Internal server error' });
-                return;
+                return res.status(500).json({ error: 'Internal server error' });
             }
             if (result.affectedRows === 0) {
-                res.status(404).json({ error: `Parking space with id ${spaceId} not found` });
-                return;
+                return res.status(404).json({ error: `Parking space with id ${space_id} not found` });
             }
-            res.json({ message: `Parking space with id ${spaceId} updated successfully` });
+            res.json({ message: `Parking space with id ${space_id} updated successfully` });
         });
     },
+  
 
     deleteParkingSpace: (req, res) => {
         const spaceId = req.params.id;

@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 function login() {
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
@@ -144,6 +145,39 @@ if (authForm) {
         const password = authForm.elements['password'].value;
         const authenticatedUser = authenticate(username, password);
 
+=======
+const authErrorMessage = document.getElementById('auth-error');
+const parkingLotSelect = document.getElementById('parking-lots');
+const slotsContainer = document.getElementById('slots-container');
+const entryForm = document.getElementById('entry-form');
+const exitForm = document.getElementById('exit-form');
+const amountDisplay = document.getElementById('amount-display');
+const viewParkingLotButton = document.getElementById('view-parking-lot');
+const authForm = document.getElementById('auth-form'); // Ensure you have this line
+
+let currentUser = null;
+let firstAvailableSpaceId = null;
+
+// Static user credentials
+const users = [
+    { username: 'admin', password: 'admin' },
+    { username: 'user', password: 'user' }
+];
+
+// Function to authenticate user
+function authenticate(username, password) {
+    return users.find(user => user.username === username && user.password === password);
+}
+
+// Event listener for authentication form
+if (authForm) {
+    authForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const username = authForm.elements['username'].value;
+        const password = authForm.elements['password'].value;
+        const authenticatedUser = authenticate(username, password);
+
+>>>>>>> Stashed changes
         if (authenticatedUser) {
             authErrorMessage.style.display = 'none';
             authForm.reset();
@@ -251,6 +285,7 @@ fetchParkingLots();
 if (entryForm) {
     entryForm.addEventListener('submit', async (e) => {
         e.preventDefault();
+<<<<<<< Updated upstream
         if (!currentUser) {
             alert('Please log in first.');
             return;
@@ -259,6 +294,12 @@ if (entryForm) {
         const data = Object.fromEntries(formData.entries());
         data.space_id = firstAvailableSpaceId; // Assign the first available space ID
 
+=======
+      
+        const formData = new FormData(entryForm);
+        const data = Object.fromEntries(formData.entries());
+        const { lp, on, oc, vt } = data;
+>>>>>>> Stashed changes
         try {
             const response = await fetch('/api/vehicles', {
                 method: 'POST',
@@ -277,6 +318,7 @@ if (entryForm) {
             console.error('Error submitting vehicle entry:', error);
             alert('Failed to submit vehicle entry');
         }
+<<<<<<< Updated upstream
         updateParkingSpace(firstAvailableSpaceId,1);
 
         
@@ -287,6 +329,13 @@ if (entryForm) {
 }
 
 
+=======
+        updateParkingSpace(firstAvailableSpaceId, 1);
+        createLog(lp, firstAvailableSpaceId);
+    });
+}
+
+>>>>>>> Stashed changes
 const createLog = async (vehicle_id, space_id) => {
     const entry_time = new Date().toISOString(); // Set current date and time as entry time
 
@@ -319,9 +368,12 @@ const createLog = async (vehicle_id, space_id) => {
     }
 };
 
+<<<<<<< Updated upstream
 
 
 
+=======
+>>>>>>> Stashed changes
 // Event listener for vehicle exit form (dummy function)
 if (exitForm) {
     exitForm.addEventListener('submit', async (e) => {
@@ -340,16 +392,27 @@ if (exitForm) {
     });
 }
 
+<<<<<<< Updated upstream
 
 async function updateParkingSpace(spaceId, isOccupied) {
     const data = {
         space_number: spaceId,
+=======
+// Function to update parking space status
+async function updateParkingSpace(spaceId, isOccupied) {
+    const data = {
+        space_id: spaceId,
+>>>>>>> Stashed changes
         is_occupied: isOccupied
     };
 
     try {
         const response = await fetch(`/api/parking-spaces/${spaceId}`, {
+<<<<<<< Updated upstream
             method: 'PUT',
+=======
+            method: 'POST',
+>>>>>>> Stashed changes
             headers: {
                 'Content-Type': 'application/json'
             },
