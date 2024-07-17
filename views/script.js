@@ -228,6 +228,39 @@ async function updateParkingSpace(space_id, is_occupied) {
     }
 }
 
+
+const createLog = async (vehicle_id, space_id) => {
+    const entry_time = new Date().toISOString(); // Set current date and time as entry time
+
+    const data = {
+        vehicle_id,
+        space_id,
+        entry_time,
+        exit_time: null // Setting exit time as null initially
+    };
+
+    try {
+        const response = await fetch('/api/logs', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to create log entry');
+        }
+
+        const result = await response.json();
+        console.log(result.message); // Optional: log success message or handle response
+        return result; // Optionally return any response data
+    } catch (error) {
+        console.error('Error creating log entry:', error);
+        throw new Error('Failed to create log entry');
+    }
+};a
+
 // Event listener for vehicle exit form (dummy function)
 if (exitForm) {
     exitForm.addEventListener('submit', async (e) => {
