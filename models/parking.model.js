@@ -95,6 +95,8 @@ const ParkingModel = {
     db.query(
         'UPDATE EntryExitLogs SET exit_time = ? WHERE license_plate = ?',
         [exit_time, license_plate],
+        'update ParkingSpaces set is_occupied=0 where space_id=(select space_id from EntryExitLogs where license_plate=?)',
+        [license_plate],
         (err, result) => {
             if (err) {
                 console.error('Error in updateLog:', err);
