@@ -260,7 +260,7 @@ const createLog = async (license_plate, space_id) => {
         console.error('Error creating log entry:', error);
         throw new Error('Failed to create log entry');
     }
-};a
+};
 
 // Event listener for vehicle exit form (dummy function)
 if (exitForm) {
