@@ -174,8 +174,8 @@ if (entryForm) {
         e.preventDefault();
 
         const formData = new FormData(entryForm);
-        const data = Object.fromEntries(formData.entries());
-        const { license_plate, owner_name, owner_contact, vehicle_type } = data;
+        var data = Object.fromEntries(formData.entries());
+        var { license_plate, owner_name, owner_contact, vehicle_type } = data;
 
         try {
             const response = await fetch('/api/vehicles', {
@@ -199,7 +199,7 @@ if (entryForm) {
         const fasidValue = getFasidFromCookie();
         console.log("After Form Submission, fasid:", fasidValue);
         updateParkingSpace(fasidValue, 1);
-        createlog(license_plate,fasidValue);
+        createLog(license_plate,fasidValue);
     });
 }
 
@@ -230,23 +230,26 @@ async function updateParkingSpace(space_id, is_occupied) {
 }
 
 
-const createLog = async (license_plate, space_id) => {
-    const entry_time = new Date().getHours // Set current date and time as entry time
-    console.log(entry_time);
-    console.log(entry_time);
+var createLog = async (license_plate, space_id) => {
+    const date = new Date();
+    const entry_time = date.toTimeString().split(' ')[0]; // Extracting HH:MM:SS format
+    console.log('Entry time:', entry_time); 
+
     const data = {
         license_plate,
         space_id,
         entry_time
     };
 
+    console.log('Data to be sent:', data);
+    dat1=JSON.stringify(data);
     try {
         const response = await fetch('/api/logs', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(data)
+            body: dat1
         });
 
         if (!response.ok) {
@@ -260,7 +263,9 @@ const createLog = async (license_plate, space_id) => {
         console.error('Error creating log entry:', error);
         throw new Error('Failed to create log entry');
     }
-};a
+};
+
+
 
 // Event listener for vehicle exit form (dummy function)
 if (exitForm) {
