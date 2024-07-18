@@ -139,20 +139,20 @@ const ParkingController = {
         });
     },
 
-    updateVehicle: (req, res) => {
-        const vehicleId = req.params.id;
-        const { license_plate, owner_name, owner_contact, vehicle_type } = req.body;
-        ParkingModel.updateVehicle(vehicleId, license_plate, owner_name, owner_contact, vehicle_type, (err, result) => {
+    updateLog: (req, res) => {
+        const logId = req.params.id;
+        const { license_plate, exit_time } = req.body;
+        ParkingModel.updateLog({ license_plate, exit_time }, (err, result) => {
             if (err) {
                 console.error(err);
                 res.status(500).json({ error: 'Internal server error' });
                 return;
             }
             if (result.affectedRows === 0) {
-                res.status(404).json({ error: `Vehicle with id ${vehicleId} not found` });
+                res.status(404).json({ error: `Entry/Exit log with id ${logId} not found` });
                 return;
             }
-            res.json({ message: `Vehicle with id ${vehicleId} updated successfully` });
+            res.json({ message: `Entry/Exit log with id ${logId} updated successfully` });
         });
     },
 
@@ -215,22 +215,24 @@ const ParkingController = {
     
     
 
-    updateLog: (req, res) => {
-        const logId = req.params.id;
-        const { vehicle_id, parking_lot_id, entry_time, exit_time, amount } = req.body;
-        ParkingModel.updateLog(logId, vehicle_id, parking_lot_id, entry_time, exit_time, amount, (err, result) => {
-            if (err) {
-                console.error(err);
-                res.status(500).json({ error: 'Internal server error' });
-                return;
-            }
-            if (result.affectedRows === 0) {
-                res.status(404).json({ error: `Entry/Exit log with id ${logId} not found` });
-                return;
-            }
-            res.json({ message: `Entry/Exit log with id ${logId} updated successfully` });
-        });
-    },
+    
+        updateLog: (req, res) => {
+            const logId = req.params.id;
+            const { license_plate, exit_time } = req.body;
+            ParkingModel.updateLog({ license_plate, exit_time }, (err, result) => {
+                if (err) {
+                    console.error(err);
+                    res.status(500).json({ error: 'Internal server error' });
+                    return;
+                }
+                if (result.affectedRows === 0) {
+                    res.status(404).json({ error: `Entry/Exit log with id ${logId} not found` });
+                    return;
+                }
+                res.json({ message: `Entry/Exit log with id ${logId} updated successfully` });
+            });
+        },
+    
 
     deleteLog: (req, res) => {
         const logId = req.params.id;

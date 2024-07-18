@@ -89,16 +89,26 @@ const ParkingModel = {
     },
     
     
+
+   // Example model function to update log entry
+   updateLog: ({ license_plate, exit_time }, callback) => {
+    db.query(
+        'UPDATE EntryExitLogs SET exit_time = ? WHERE license_plate = ?',
+        [exit_time, license_plate],
+        (err, result) => {
+            if (err) {
+                console.error('Error in updateLog:', err);
+                callback(err, null);
+                return;
+            }
+            callback(null, result);
+        }
+    );
+},
+
     
 
-    updateLog: (id, data, callback) => {
-        const { vehicle_id, space_id, entry_time, exit_time } = data;
-        db.query(
-            'UPDATE EntryExitLogs SET vehicle_id = ?, space_id = ?, entry_time = ?, exit_time = ? WHERE log_id = ?',
-            [vehicle_id, space_id, entry_time, exit_time, id],
-            callback
-        );
-    },
+    
 
     deleteLog: (id, callback) => {
         db.query('DELETE FROM EntryExitLogs WHERE log_id = ?', [id], (err, results) => {
