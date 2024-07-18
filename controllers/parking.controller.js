@@ -140,7 +140,6 @@ const ParkingController = {
     },
 
     updateLog: (req, res) => {
-        const logId = req.params.id;
         const { license_plate, exit_time } = req.body;
         ParkingModel.updateLog({ license_plate, exit_time }, (err, result) => {
             if (err) {
@@ -149,10 +148,10 @@ const ParkingController = {
                 return;
             }
             if (result.affectedRows === 0) {
-                res.status(404).json({ error: `Entry/Exit log with id ${logId} not found` });
+                res.status(404).json({ error: `Entry/Exit log with license_plate ${license_plate} not found` });
                 return;
             }
-            res.json({ message: `Entry/Exit log with id ${logId} updated successfully` });
+            res.json({ message: `Entry/Exit log with license_plate ${license_plate} updated successfully` });
         });
     },
 

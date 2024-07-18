@@ -95,15 +95,26 @@ const ParkingModel = {
     db.query(
         'UPDATE EntryExitLogs SET exit_time = ? WHERE license_plate = ?',
         [exit_time, license_plate],
-        'update ParkingSpaces set is_occupied=0 where space_id=(select space_id from EntryExitLogs where license_plate=?)',
-        [license_plate],
         (err, result) => {
             if (err) {
                 console.error('Error in updateLog:', err);
                 callback(err, null);
                 return;
             }
-            callback(null, result);
+
+            // After updating the log, update the parking space
+            db.query(
+                'UPDATE ParkingSpaces SET is_occupied = 0 WHERE space_id = (SELECT space_id FROM EntryExitLogs WHERE license_plate = ?)',
+                [license_plate],
+                (err, result) => {
+                    if (err) {
+                        console.error('Error in updating ParkingSpaces:', err);
+                        callback(err, null);
+                        return;
+                    }
+                    callback(null, result);
+                }
+            );
         }
     );
 },

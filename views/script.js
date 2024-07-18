@@ -272,15 +272,54 @@ if (exitForm) {
     exitForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
+        const formData = new FormData(exitForm);
+        const data = Object.fromEntries(formData.entries());
+        var { license_plate } = data;
+        console.log("hello");
         try {
-            // Implement your vehicle exit logic here
-            alert('Vehicle exit recorded'); // Dummy alert
+            // Set exit time
+            console.log("hello1");
+
+            const date = new Date();
+            const exit_time = date.toTimeString().split(' ')[0];
+            console.log(exit_time);
+            console.log(license_plate);
+
+            console.log(data);
+
+
+            // Update log entry with exit time and update parking space status
+            const updateResponse = await fetch(`/api/logs`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ license_plate, exit_time })
+            });
+            if (!updateResponse.ok) {
+                console.log("hello3");
+
+                throw new Error('Failed to update log entry');
+            }
+
+            // const result = await updateResponse.json();
+
+            // // Calculate parking fee
+            // const { entry_time, space_id } = result;
+            // const fee = calculateFee(entry_time, exit_time);
+            // amountDisplay.textContent = `Total Amount: $${fee}`;
+
+            alert('Vehicle exit recorded');
             exitForm.reset();
         } catch (error) {
+            console.log("hello4");
+
             console.error('Error updating log:', error);
+            alert('Failed to record vehicle exit');
         }
     });
 }
+
 
 // Function to toggle the menu
 window.toggleMenu = function() {
