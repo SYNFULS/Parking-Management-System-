@@ -1,4 +1,4 @@
-dockerfileFROM node:14-alpine
+FROM node:14-alpine
 
 WORKDIR /app
 
